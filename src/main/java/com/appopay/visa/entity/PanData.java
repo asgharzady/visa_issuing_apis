@@ -14,8 +14,10 @@ public class PanData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Long bin;
+    private Long productCode;
 
-    private BigInteger sequence;
+    private Long RandomNumber;
 
     private Instant createdAt;
 

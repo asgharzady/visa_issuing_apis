@@ -1,6 +1,7 @@
 package com.appopay.visa.controller;
 
 import com.appopay.visa.model.*;
+import com.appopay.visa.service.PanService;
 import com.appopay.visa.service.VisaAuthAndEncryptionServicesImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -21,6 +22,9 @@ public class CardManagementController {
 
     @Autowired
     private VisaAuthAndEncryptionServicesImpl visaAuthAndEncryptionServices;
+
+    @Autowired
+    private PanService panService;
 
     @PostMapping(value = "newCard")
     public ResponseEntity<NewCardResponseDTO> issueNewCard(@RequestBody NewCardRequestDTO request) throws IOException {
@@ -60,5 +64,13 @@ public class CardManagementController {
 
         return ResponseEntity.ok().body(response);
     }
+
+    @GetMapping(value = "generatePan")
+    public ResponseEntity<String> generatePan() throws Exception {
+        String pan = panService.generatePan();
+        return ResponseEntity.ok(pan);
+    }
+
+
 
 }
