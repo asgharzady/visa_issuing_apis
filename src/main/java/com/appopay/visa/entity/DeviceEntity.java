@@ -2,26 +2,22 @@ package com.appopay.visa.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import java.time.Instant;
-import java.util.List;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-@Table(name = "iam")
+import java.time.Instant;
+
+@Table(name = "devices")
 @Data
 @Entity
-public class IamEntity {
+public class DeviceEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String userName;
-
-    private String password;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "iam_id")
-    private List<DeviceEntity> devices;
-
+    private String deviceId;
+    private String status;
+    @CreationTimestamp
     private Instant createdAt;
-
+    @UpdateTimestamp
     private Instant updatedAt;
 }
