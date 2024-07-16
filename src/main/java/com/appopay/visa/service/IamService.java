@@ -26,14 +26,8 @@ public class IamService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-//    public IamEntity save(IamEntity iamEntity) {
-//        iamEntity.setPassword(passwordEncoder.encode(iamEntity.getPassword()));
-//        return iamRepository.save(iamEntity);
-//    }
-
-//    public IamEntity findByUsername(String username) {
-//        return iamRepository.findByUsername(username).orElse(null);
-//    }
+    @Autowired
+    private OFACService ofacService;
 
     public boolean existsByUsername(String username) {
         return iamRepository.findByUserName(username).isPresent();
@@ -60,6 +54,9 @@ public class IamService {
     public String signUpRegister(IamDTO signupRequest) {
         if (existsByUsername(signupRequest.getUserName())) {
             return "Username is already taken!";
+        }
+        if(!ofacService.ofacApproved(signupRequest.getUserName())){
+            return "OFAC NOT APPROVED";
         }
 
         IamEntity iamEntity = new IamEntity();

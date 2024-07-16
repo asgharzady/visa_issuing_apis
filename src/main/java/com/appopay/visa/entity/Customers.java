@@ -24,10 +24,13 @@ public class Customers {
 
     private String address;
 
+    private String ofac;
+
     private String gender;
 
     private Instant createdAt;
 
     private Instant updatedAt;
+
 
 }
