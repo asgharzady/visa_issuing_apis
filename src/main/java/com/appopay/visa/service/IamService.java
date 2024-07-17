@@ -55,7 +55,7 @@ public class IamService {
         if (existsByUsername(signupRequest.getUserName())) {
             return "Username is already taken!";
         }
-        if(!ofacService.ofacApproved(signupRequest.getUserName())){
+        if(!ofacService.isApproved(signupRequest.getName())){
             return "OFAC NOT APPROVED";
         }
 
