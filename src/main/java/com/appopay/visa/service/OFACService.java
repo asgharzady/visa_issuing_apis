@@ -1,8 +1,11 @@
 package com.appopay.visa.service;
 
+import com.appopay.visa.entity.OFACEntity;
 import com.appopay.visa.model.ApiResponseDTO;
 import com.appopay.visa.model.OfacRequestDTO;
+import com.appopay.visa.repository.OFACRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -18,12 +21,29 @@ import java.util.List;
 @Service
 public class OFACService {
 
+    @Autowired
+    private OFACRepository ofacRepository;
 
     public boolean isApproved(String name) {
-        if (getMatches(name) > 0)
-            return false;
-        else {
-            return true;
+        OFACEntity savedOFAC = ofacRepository.findByName(name);
+        if (savedOFAC != null) {
+            if (savedOFAC.isBLocked())
+                return false;
+            else {
+                return true;
+            }
+        } else {
+            OFACEntity ofac = new OFACEntity();
+            ofac.setName(name);
+            if (getMatches(name) > 0) {
+                ofac.setBLocked(true);
+                ofacRepository.save(ofac);
+                return false;
+            } else {
+                ofac.setBLocked(false);
+                ofacRepository.save(ofac);
+                return true;
+            }
         }
     }
 
@@ -64,8 +84,8 @@ public class OFACService {
             // Parse JSON response into ApiResponse object
             ApiResponseDTO apiResponse = objectMapper.readValue(response.body().string(), ApiResponseDTO.class);
 
-            System.out.println("match count");
             Integer matchCount = apiResponse.getResults().get(0).getMatchCount();
+            System.out.println("ofac match count");
             System.out.println(matchCount);
             return matchCount;
 
