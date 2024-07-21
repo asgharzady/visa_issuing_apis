@@ -2,6 +2,7 @@ package com.appopay.visa.service;
 
 import com.appopay.visa.entity.OFACEntity;
 import com.appopay.visa.model.ApiResponseDTO;
+import com.appopay.visa.model.ChangeOfacRequestDTO;
 import com.appopay.visa.model.OfacRequestDTO;
 import com.appopay.visa.repository.OFACRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -94,6 +95,24 @@ public class OFACService {
         }
 
         return 0;
+    }
+
+    public String getStatus(String name) throws Exception {
+        OFACEntity ofacEntity = ofacRepository.findByName(name);
+        if(ofacEntity == null)
+            return "NOT FOUND";
+        if(ofacEntity.isBLocked())
+            return "BLOCKED";
+        else return "UNBLOCKED";
+    }
+
+    public String changeStatus(ChangeOfacRequestDTO request) throws Exception {
+        OFACEntity ofacEntity = ofacRepository.findByName(request.getName());
+        if(ofacEntity == null)
+            return "NOT FOUND";
+        ofacEntity.setBLocked(request.getIsBLocked());
+        ofacRepository.save(ofacEntity);
+        return "blocked " + ofacEntity.isBLocked();
     }
 
 
