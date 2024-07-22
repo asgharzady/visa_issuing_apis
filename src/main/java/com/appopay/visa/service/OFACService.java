@@ -4,9 +4,11 @@ import com.appopay.visa.entity.OFACEntity;
 import com.appopay.visa.model.ApiResponseDTO;
 import com.appopay.visa.model.ChangeOfacRequestDTO;
 import com.appopay.visa.model.OfacRequestDTO;
+import com.appopay.visa.model.PaginatedOfacDto;
 import com.appopay.visa.repository.OFACRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -18,17 +20,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OFACService {
 
     @Autowired
     private OFACRepository ofacRepository;
-
     public boolean isApproved(String name) {
         OFACEntity savedOFAC = ofacRepository.findByName(name);
         if (savedOFAC != null) {
-            if (savedOFAC.isBLocked())
+            if (savedOFAC.getIsBLocked())
                 return false;
             else {
                 return true;
@@ -37,17 +39,16 @@ public class OFACService {
             OFACEntity ofac = new OFACEntity();
             ofac.setName(name);
             if (getMatches(name) > 0) {
-                ofac.setBLocked(true);
+                ofac.setIsBLocked(true);
                 ofacRepository.save(ofac);
                 return false;
             } else {
-                ofac.setBLocked(false);
+                ofac.setIsBLocked(false);
                 ofacRepository.save(ofac);
                 return true;
             }
         }
     }
-
     public Integer getMatches(String name) {
         OkHttpClient client = new OkHttpClient();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -96,24 +97,29 @@ public class OFACService {
 
         return 0;
     }
-
     public String getStatus(String name) throws Exception {
         OFACEntity ofacEntity = ofacRepository.findByName(name);
         if(ofacEntity == null)
             return "NOT FOUND";
-        if(ofacEntity.isBLocked())
+        if(ofacEntity.getIsBLocked())
             return "BLOCKED";
         else return "UNBLOCKED";
     }
-
     public String changeStatus(ChangeOfacRequestDTO request) throws Exception {
         OFACEntity ofacEntity = ofacRepository.findByName(request.getName());
         if(ofacEntity == null)
             return "NOT FOUND";
-        ofacEntity.setBLocked(request.getIsBLocked());
+        ofacEntity.setIsBLocked(request.getIsBLocked());
         ofacRepository.save(ofacEntity);
-        return "blocked " + ofacEntity.isBLocked();
+        return "blocked " + ofacEntity.getIsBLocked();
     }
 
+    public PaginatedOfacDto getAll(Pageable pageable){
+        PaginatedOfacDto response = new PaginatedOfacDto();
+        response.setData(ofacRepository.findAll(pageable).stream().map(OFACEntity::toDTO).collect(Collectors.toList()));
+        response.setDocuments(ofacRepository.count());
+        return response;
+
+    }
 
 }
