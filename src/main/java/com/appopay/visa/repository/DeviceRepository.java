@@ -16,4 +16,7 @@ public interface DeviceRepository extends JpaRepository<DeviceEntity, Long> {
     @Query("SELECT e FROM DeviceEntity e WHERE e.updatedAt < :time AND e.status = :status")
     List<DeviceEntity> findAllWithUpdatedTimeBeforeAndStatus(@Param("time") Instant time, @Param("status") String status);
 
+    DeviceEntity findByDeviceId(String deviceId);
+    DeviceEntity findByMobilePin(String mobilePin);
+    DeviceEntity findByDeviceIdAndMobilePin(String deviceId, String mobilePin);
 }

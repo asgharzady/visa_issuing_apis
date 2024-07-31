@@ -23,6 +23,9 @@ public class DeviceService {
     @Autowired
     private IamRepository iamRepository;
 
+    @Autowired
+    private DeviceRepository deviceRepository;
+
 
     public String getDeviceStatus(String deviceId, String username) {
 
@@ -72,4 +75,23 @@ public class DeviceService {
         return "ok";
     }
 
+    public void savePin(String deviceId, String mobilePin) {
+//        DeviceEntity existingDevice = deviceRepository.findByMobilePin(mobilePin);
+//        if (existingDevice != null && !existingDevice.getDeviceId().equals(deviceId)) {
+//            throw new IllegalArgumentException("PIN already associated with another device");
+//        }
+
+        DeviceEntity device = deviceRepository.findByDeviceId(deviceId);
+        if (device == null) {
+            device = new DeviceEntity();
+            device.setDeviceId(deviceId);
+        }
+        device.setMobilePin(mobilePin);
+        deviceRepository.save(device);
+    }
+
+    public boolean verifyPin(String deviceId, String mobilePin) {
+        DeviceEntity device = deviceRepository.findByDeviceIdAndMobilePin(deviceId, mobilePin);
+        return device != null;
+    }
 }

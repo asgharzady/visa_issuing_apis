@@ -1,7 +1,10 @@
 package com.appopay.visa.controller;
 
 import com.appopay.visa.model.DeviceEnquiryRequestDTO;
+import com.appopay.visa.model.DevicePinSaveRequestDTO;
+import com.appopay.visa.model.DeviceVerifyPinRequestDTO;
 import com.appopay.visa.service.DeviceService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,5 +39,26 @@ public class DeviceController {
         return ResponseEntity.ok().body(status);
     }
 
+    @PostMapping("/save-pin")
+    public ResponseEntity<String> savePin(@Valid @RequestBody DevicePinSaveRequestDTO request) {
+        deviceService.savePin(request.getDeviceId(), request.getMobilePin());
+        return ResponseEntity.ok("Mobile PIN saved successfully");
+    }
+
+    @PostMapping("/update-pin")
+    public ResponseEntity<String> updatePin(@Valid @RequestBody DevicePinSaveRequestDTO request) {
+        deviceService.savePin(request.getDeviceId(), request.getMobilePin());
+        return ResponseEntity.ok("Mobile PIN updated successfully");
+    }
+
+    @PostMapping("/verify-pin")
+    public ResponseEntity<String> verifyPin(@Valid @RequestBody DeviceVerifyPinRequestDTO request) {
+        boolean isVerified = deviceService.verifyPin(request.getDeviceId(), request.getMobilePin());
+        if (isVerified) {
+            return ResponseEntity.ok("PIN verified successfully");
+        } else {
+            return ResponseEntity.status(401).body("Invalid PIN or device");
+        }
+    }
 
 }
