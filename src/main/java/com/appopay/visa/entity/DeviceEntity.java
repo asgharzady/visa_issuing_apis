@@ -14,6 +14,7 @@ public class DeviceEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true)
     private String deviceId;
     private String status;
     private String mobilePin;
