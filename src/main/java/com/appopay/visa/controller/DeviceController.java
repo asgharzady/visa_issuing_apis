@@ -53,12 +53,8 @@ public class DeviceController {
 
     @PostMapping("/verify-pin")
     public ResponseEntity<String> verifyPin(@Valid @RequestBody DeviceVerifyPinRequestDTO request) {
-        boolean isVerified = deviceService.verifyPin(request.getDeviceId(), request.getMobilePin());
-        if (isVerified) {
+        deviceService.verifyPin(request.getDeviceId(), request.getMobilePin());
             return ResponseEntity.ok("PIN verified successfully");
-        } else {
-            return ResponseEntity.status(401).body("Invalid PIN or device");
-        }
     }
 
 }

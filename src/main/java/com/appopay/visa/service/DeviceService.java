@@ -1,5 +1,6 @@
 package com.appopay.visa.service;
 
+import com.appopay.visa.Exception.CustomException;
 import com.appopay.visa.entity.Customers;
 import com.appopay.visa.entity.DeviceEntity;
 import com.appopay.visa.entity.IamEntity;
@@ -90,8 +91,13 @@ public class DeviceService {
         deviceRepository.save(device);
     }
 
-    public boolean verifyPin(String deviceId, String mobilePin) {
-        DeviceEntity device = deviceRepository.findByDeviceIdAndMobilePin(deviceId, mobilePin);
-        return device != null;
+    public void verifyPin(String deviceId, String mobilePin) {
+        DeviceEntity device = deviceRepository.findByDeviceId(deviceId);
+        if(device == null){
+            throw new CustomException("Invalid device id");
+        }
+        else if(!(device.getMobilePin().equals(mobilePin))){
+            throw new CustomException("invalid mobile pin");
+        }
     }
 }
