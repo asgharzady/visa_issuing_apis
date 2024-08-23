@@ -3,6 +3,7 @@ package com.appopay.visa.controller;
 import com.appopay.visa.model.DeviceEnquiryRequestDTO;
 import com.appopay.visa.model.DevicePinSaveRequestDTO;
 import com.appopay.visa.model.DeviceVerifyPinRequestDTO;
+import com.appopay.visa.model.ResponseDTO;
 import com.appopay.visa.service.DeviceService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,16 +28,15 @@ public class DeviceController {
     }
 
     @PostMapping(value = "bind")
-    public ResponseEntity<String> bindDevice(@RequestBody DeviceEnquiryRequestDTO request) {
+    public ResponseEntity<ResponseDTO> bindDevice(@RequestBody DeviceEnquiryRequestDTO request) {
         String status = deviceService.bindDevice(request.getDeviceId(),request.getUsername(),null);
-        return ResponseEntity.ok().body(status);
+        return ResponseEntity.ok().body(new ResponseDTO(status));
     }
 
     @PostMapping(value = "reBind")
-    public ResponseEntity<String> reBindDevice(@RequestBody DeviceEnquiryRequestDTO request) {
-        System.out.println(Instant.now());
+    public ResponseEntity<ResponseDTO> reBindDevice(@RequestBody DeviceEnquiryRequestDTO request) {
         String status = deviceService.reBindDevice(request.getDeviceId(),request.getUsername());
-        return ResponseEntity.ok().body(status);
+        return ResponseEntity.ok().body(new ResponseDTO(status));
     }
 
     @PostMapping("/save-pin")

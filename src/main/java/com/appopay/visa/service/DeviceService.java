@@ -1,6 +1,6 @@
 package com.appopay.visa.service;
 
-import com.appopay.visa.Exception.CustomException;
+import com.appopay.visa.exception.CustomException;
 import com.appopay.visa.entity.Customers;
 import com.appopay.visa.entity.DeviceEntity;
 import com.appopay.visa.entity.IamEntity;
@@ -68,7 +68,7 @@ public class DeviceService {
             iamRepository.save(iam);
             return "ok";
         }
-        throw new UsernameNotFoundException("Username not found");
+        throw new CustomException("Username not found");
     }
 
     public String reBindDevice(String deviceId, String username) {
