@@ -22,8 +22,7 @@ public class TwillioService {
         TwillioResponseDTO twillioResponse = null;
         try {
             // Twilio credentials
-//            accountSid = "ACcb8a9cafc3d4f2edc757fafb9ffbdd40";
-//            authToken = "22014231ce97b35b684e1ea607901d94";
+
             String credentials = twillioRequest.getAccountSid() + ":" + authToken;
             String basicAuth = "Basic " + Base64.getEncoder().encodeToString(credentials.getBytes());
 //
