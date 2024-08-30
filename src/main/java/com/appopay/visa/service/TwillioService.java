@@ -23,8 +23,11 @@ public class TwillioService {
         try {
             // Twilio credentials
 
-            String credentials = twillioRequest.getAccountSid() + ":" + authToken;
-            String basicAuth = "Basic " + Base64.getEncoder().encodeToString(credentials.getBytes());
+//            String credentials = twillioRequest.getAccountSid() + ":" + authToken;
+            String basicAuth = "Basic " + authToken;
+
+
+
 //
 //            // Message details
 //            String body = "Hello, this is a test message!";
