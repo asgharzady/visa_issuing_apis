@@ -7,6 +7,10 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("twilio/")
@@ -16,11 +20,18 @@ public class TwilioController {
     private TwillioService twillioService;
 
 
-    @PostMapping(value = "getSms/")
-    public ResponseEntity<TwillioResponseDTO> getSms(@RequestHeader("auth") String auth,
-                                                     @RequestBody TwillioRequestDTO body
-    ) {
-        System.out.println("this");
-        return ResponseEntity.ok().body(twillioService.sendSMS(auth, body));
-    }
+//    @PostMapping(value = "getSms/")
+//    public ResponseEntity<TwillioResponseDTO> getSms(@RequestHeader("auth") String auth,
+//                                                     @RequestBody TwillioRequestDTO body
+//    ) {
+//        System.out.println("this");
+//        return ResponseEntity.ok().body(twillioService.sendSMS(auth, body));
+//    }
+@PostMapping("/sendSms")
+public String sendSms(
+        @RequestParam("to") String to,
+        @RequestParam("from") String from,
+        @RequestParam("body") String body) {
+    return twillioService.sendSMS(to, from, body);
+}
 }

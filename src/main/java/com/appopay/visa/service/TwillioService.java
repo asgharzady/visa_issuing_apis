@@ -1,24 +1,32 @@
 package com.appopay.visa.service;
-import com.appopay.visa.model.ApiResponseDTO;
+
 import com.appopay.visa.model.TwillioRequestDTO;
 import com.appopay.visa.model.TwillioResponseDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import okhttp3.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.IOException;
-import java.util.Base64;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
-import java.util.Base64;
 
 @Service
 public class TwillioService {
 
+    private static final Logger logger = LoggerFactory.getLogger(TwillioService.class);
     private static final OkHttpClient client = new OkHttpClient();
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public TwillioResponseDTO sendSMS(String authToken, TwillioRequestDTO twillioRequest) {
+    public TwillioResponseDTO sendSMs(String authToken, TwillioRequestDTO twillioRequest) {
         TwillioResponseDTO twillioResponse = null;
         try {
             // Twilio credentials
@@ -66,4 +74,33 @@ public class TwillioService {
         }
         return twillioResponse;
     }
+
+    @Value("${twilio.account.sid}")
+    private String accountSid;
+
+    @Value("${twilio.auth.token}")
+    private String authToken;
+
+    public String sendSMS(String to, String from, String body) {
+        String url = "https://api.twilio.com/2010-04-01/Accounts/" + accountSid + "/Messages.json";
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBasicAuth(accountSid, authToken);
+        headers.setContentType(org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED);
+
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        map.add("To", to);
+        map.add("From", from);
+        map.add("Body", body);
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+
+        ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
+
+        return response.getBody();
+    }
+
+
 }
