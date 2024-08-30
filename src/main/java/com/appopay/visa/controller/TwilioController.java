@@ -16,11 +16,10 @@ public class TwilioController {
     private TwillioService twillioService;
 
 
-    @PostMapping(value = "getSms/")
-    public ResponseEntity<TwillioResponseDTO> getSms(@RequestHeader("auth") String auth,
-                                                     @RequestBody TwillioRequestDTO body
+    @PostMapping(value = "getSms/{toNumber}")
+    public ResponseEntity<TwillioResponseDTO> getSms(@PathVariable("toNumber") String toNumber
     ) {
         System.out.println("this");
-        return ResponseEntity.ok().body(twillioService.sendSMS(auth, body));
+        return ResponseEntity.ok().body(twillioService.sendSMS(toNumber));
     }
 }

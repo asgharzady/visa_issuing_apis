@@ -1,13 +1,16 @@
 package com.appopay.visa.service;
 
+import com.appopay.visa.exception.CustomException;
 import com.appopay.visa.model.TwillioRequestDTO;
 import com.appopay.visa.model.TwillioResponseDTO;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import okhttp3.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.util.Base64;
 
 
 @Service
@@ -16,14 +19,23 @@ public class TwillioService {
     private static final OkHttpClient client = new OkHttpClient();
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public TwillioResponseDTO sendSMS(String authToken, TwillioRequestDTO twillioRequest) {
+    @Value("${twilio.account.sid}")
+    private String accountSid;
+
+    @Value("${twilio.auth.token}")
+    private String authToken;
+
+    @Value("${twilio.number}")
+    private String fromNumber;
+
+    public TwillioResponseDTO sendSMS(String toNumber) {
         TwillioResponseDTO twillioResponse = null;
         try {
-            // Twilio credentials
 
-//            String credentials = twillioRequest.getAccountSid() + ":" + authToken;
-            String basicAuth = "Basic " + authToken;
 
+            String authString = accountSid + ":" + authToken;
+            String encodedAuth = Base64.getEncoder().encodeToString(authString.getBytes());
+            String basicAuth = "Basic " + encodedAuth;
 
 
 //
@@ -34,14 +46,14 @@ public class TwillioService {
 
             // Form the request body
             RequestBody requestBody = new FormBody.Builder()
-                    .add("Body", twillioRequest.getBody())
-                    .add("From", twillioRequest.getFrom())
-                    .add("To", twillioRequest.getTo())
+                    .add("Body", "this is your otp")
+                    .add("From", fromNumber)
+                    .add("To", toNumber)
                     .build();
 
             // Build the request
             Request request = new Request.Builder()
-                    .url("https://api.twilio.com/2010-04-01/Accounts/" + twillioRequest.getAccountSid() + "/Messages.json")
+                    .url("https://api.twilio.com/2010-04-01/Accounts/" + accountSid + "/Messages.json")
                     .post(requestBody)
                     .addHeader("Authorization", basicAuth)
                     .addHeader("Content-Type", "application/x-www-form-urlencoded")
@@ -49,7 +61,7 @@ public class TwillioService {
             // Execute the request
             try (Response response = client.newCall(request).execute()) {
                 if (!response.isSuccessful()) {
-                    throw new IOException("Unexpected HTTP status code: " + response.code());
+                    throw new CustomException("Unexpected HTTP status code: " + + response.code() + response.body());
                 }
                 twillioResponse = objectMapper.readValue(response.body().string(), TwillioResponseDTO.class);
                 System.out.println("resp.getAccount_sid()");
@@ -60,7 +72,7 @@ public class TwillioService {
 
         }
         catch (Exception e) {
-            e.printStackTrace();
+            throw new CustomException("Exception" + e);
         }
         return twillioResponse;
     }
