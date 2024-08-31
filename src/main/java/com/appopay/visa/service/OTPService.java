@@ -2,10 +2,12 @@ package com.appopay.visa.service;
 
 import com.appopay.visa.entity.OTPEntiy;
 import com.appopay.visa.exception.CustomException;
+import com.appopay.visa.model.TwillioRequestDTO;
 import com.appopay.visa.repository.OTPRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -22,9 +24,9 @@ public class OTPService {
     @Autowired
     private TwillioService twillioService;
 
-    public String sendOTP(String toNumber){
-        String otp =  generateUniqueOtp(toNumber);
-        twillioService.sendSMS(toNumber, otp);
+    public String sendOTP(TwillioRequestDTO request){
+        String otp =  generateUniqueOtp(request.getPhoneCode() + request.getMobileNumber());
+        twillioService.sendSMS(request.getPhoneCode() + request.getMobileNumber(), otp + "" + request.getHashKey());
         return otp;
     }
 

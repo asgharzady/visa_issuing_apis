@@ -10,11 +10,8 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TwillioRequestDTO {
 
-    private String body;
-    private String from;
-    private String to;
-    private String accountSid;
-
-
+    private String mobileNumber;
+    private String hashKey;
+    private String phoneCode;
 
 }

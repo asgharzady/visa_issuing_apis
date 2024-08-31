@@ -46,7 +46,7 @@ public class TwillioService {
 
             // Form the request body
             RequestBody requestBody = new FormBody.Builder()
-                    .add("Body", "this is your otp" + otp)
+                    .add("Body", "[#]Your OTP IS:" + otp)
                     .add("From", fromNumber)
                     .add("To", toNumber)
                     .build();

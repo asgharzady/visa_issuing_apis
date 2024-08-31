@@ -27,9 +27,9 @@ public class TwilioController {
     }
 
 
-    @GetMapping("/sendOTP/{toNumber}")
-    public ResponseEntity<ResponseDTO> sendOTP(@PathVariable("toNumber") String toNumber) {
-        return ResponseEntity.ok().body(new ResponseDTO(otpService.sendOTP(toNumber)));
+    @PostMapping("/sendOTP")
+    public ResponseEntity<ResponseDTO> sendOTP(@RequestBody TwillioRequestDTO request) {
+        return ResponseEntity.ok().body(new ResponseDTO(otpService.sendOTP(request)));
     }
 
     @GetMapping("/validateOTP/{toNumber}/{otp}")
