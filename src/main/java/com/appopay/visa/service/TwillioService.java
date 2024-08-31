@@ -28,7 +28,7 @@ public class TwillioService {
     @Value("${twilio.number}")
     private String fromNumber;
 
-    public TwillioResponseDTO sendSMS(String toNumber) {
+    public TwillioResponseDTO sendSMS(String toNumber, String otp) {
         TwillioResponseDTO twillioResponse = null;
         try {
 
@@ -46,7 +46,7 @@ public class TwillioService {
 
             // Form the request body
             RequestBody requestBody = new FormBody.Builder()
-                    .add("Body", "this is your otp")
+                    .add("Body", "this is your otp" + otp)
                     .add("From", fromNumber)
                     .add("To", toNumber)
                     .build();
