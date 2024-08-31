@@ -26,7 +26,7 @@ public class OTPService {
 
     public String sendOTP(TwillioRequestDTO request){
         String otp =  generateUniqueOtp(request.getPhoneCode() + request.getMobileNumber());
-        twillioService.sendSMS(request.getPhoneCode() + request.getMobileNumber(), otp + "" + request.getHashKey());
+        twillioService.sendSMS(request.getPhoneCode() + request.getMobileNumber(), otp + "," + request.getHashKey());
         return otp;
     }
 
