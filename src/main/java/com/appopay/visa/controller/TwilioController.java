@@ -33,7 +33,7 @@ public class TwilioController {
     }
 
     @GetMapping("/validateOTP/{toNumber}/{otp}")
-    public ResponseEntity<ResponseDTO> sendOTP(@PathVariable("toNumber") String toNumber,@PathVariable("otp") String otp) {
+    public ResponseEntity<ResponseDTO> validateOTP(@PathVariable("toNumber") String toNumber,@PathVariable("otp") String otp) {
         return ResponseEntity.ok().body(new ResponseDTO(otpService.validateOTP(toNumber,otp)));
     }
 }
