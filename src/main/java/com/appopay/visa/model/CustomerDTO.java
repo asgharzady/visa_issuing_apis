@@ -1,5 +1,6 @@
 package com.appopay.visa.model;
 
+import com.appopay.visa.entity.Customers;
 import lombok.Data;
 
 import java.time.Instant;
@@ -9,19 +10,30 @@ public class CustomerDTO {
 
     private Long id;
 
-    private String FistName;
+    private String fistName;
 
-    private String LastName;
+    private String lastName;
 
     private String phoneNumber;
 
     private String email;
-
     private String address;
-
     private String gender;
-
+    private String token;
     private Instant createdAt;
-
     private Instant updatedAt;
+
+    public Customers toEntity(){
+        Customers customers = new Customers();
+        customers.setId(this.id);
+        customers.setFistName(this.fistName);
+        customers.setLastName(this.lastName);
+        customers.setPhoneNumber(this.phoneNumber);
+        customers.setEmail(this.email);
+        customers.setAddress(this.address);
+        customers.setGender(this.gender);
+        customers.setToken(this.token);
+
+        return customers;
+    }
 }
