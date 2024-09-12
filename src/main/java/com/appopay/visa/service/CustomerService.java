@@ -41,21 +41,21 @@ public class CustomerService {
         }
          Customers customers = optionalCustomers.get();
 
-        if(customers.getId()!=null)
+        if(customerDTO.getId()!=null)
             customers.setId(customerDTO.getId());
-        if(customers.getFistName()!=null)
+        if(customerDTO.getFistName()!=null)
             customers.setFistName(customerDTO.getFistName());
-        if(customers.getLastName()!=null)
+        if(customerDTO.getLastName()!=null)
             customers.setLastName(customerDTO.getLastName());
-        if(customers.getPhoneNumber()!=null)
+        if(customerDTO.getPhoneNumber()!=null)
             customers.setPhoneNumber(customerDTO.getPhoneNumber());
-        if(customers.getEmail()!=null)
+        if(customerDTO.getEmail()!=null)
             customers.setEmail(customerDTO.getEmail());
-        if(customers.getAddress()!=null)
+        if(customerDTO.getAddress()!=null)
             customers.setAddress(customerDTO.getAddress());
-        if(customers.getGender()!=null)
+        if(customerDTO.getGender()!=null)
             customers.setGender(customerDTO.getGender());
-        if(customers.getToken()!=null)
+        if(customerDTO.getToken()!=null)
             customers.setToken(customerDTO.getToken());
 
         return customerRepository.save(customers).toDTO();
