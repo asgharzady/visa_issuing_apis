@@ -14,15 +14,13 @@ import java.time.Instant;
 @Entity
 public class Customers {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     private String fistName;
     private String lastName;
     private String phoneNumber;
     private String email;
     private String address;
     private String gender;
-    private String token;
     @CreationTimestamp
     private Instant createdAt;
     @UpdateTimestamp
@@ -37,7 +35,6 @@ public class Customers {
         customerDTO.setEmail(this.email);
         customerDTO.setAddress(this.address);
         customerDTO.setGender(this.gender);
-        customerDTO.setToken(this.token);
         customerDTO.setCreatedAt(this.createdAt);
         customerDTO.setUpdatedAt(this.updatedAt);
 

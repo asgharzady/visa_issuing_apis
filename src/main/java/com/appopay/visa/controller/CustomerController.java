@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("customer/")
 public class CustomerController {
@@ -28,6 +30,16 @@ public class CustomerController {
     @GetMapping("/{id}")
     public ResponseEntity<CustomerDTO> getCustomer(@PathVariable("id") Long id) {
         return ResponseEntity.ok().body(customerService.getById(id));
+    }
+
+    @PostMapping("/token")
+    public  ResponseEntity<CustomerTokenDTO> upsert(@RequestBody CustomerTokenDTO req){
+        return ResponseEntity.ok().body(customerService.upsert(req));
+    }
+
+    @GetMapping("/token/{id}")
+    public ResponseEntity<CustomerTokenDTO> getToken(@PathVariable String id){
+        return ResponseEntity.ok().body(customerService.getToken(id));
     }
 
 }

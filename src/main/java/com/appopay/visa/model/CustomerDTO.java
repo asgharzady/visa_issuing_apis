@@ -8,18 +8,13 @@ import java.time.Instant;
 @Data
 public class CustomerDTO {
 
-    private Long id;
-
+    private String id;
     private String fistName;
-
     private String lastName;
-
     private String phoneNumber;
-
     private String email;
     private String address;
     private String gender;
-    private String token;
     private Instant createdAt;
     private Instant updatedAt;
 
@@ -32,7 +27,6 @@ public class CustomerDTO {
         customers.setEmail(this.email);
         customers.setAddress(this.address);
         customers.setGender(this.gender);
-        customers.setToken(this.token);
 
         return customers;
     }
