@@ -22,9 +22,9 @@ public class DeviceController {
 
 
     @PostMapping(value = "checkStatus")
-    public ResponseEntity<String> checkDeviceBinding(@RequestBody DeviceEnquiryRequestDTO request) {
+    public ResponseEntity<ResponseDTO> checkDeviceBinding(@RequestBody DeviceEnquiryRequestDTO request) {
         String status = deviceService.getDeviceStatus(request.getDeviceId(),request.getUsername());
-        return ResponseEntity.ok().body(status);
+        return ResponseEntity.ok().body(new ResponseDTO(status));
     }
 
     @PostMapping(value = "bind")
@@ -40,21 +40,21 @@ public class DeviceController {
     }
 
     @PostMapping("/save-pin")
-    public ResponseEntity<String> savePin(@Valid @RequestBody DevicePinSaveRequestDTO request) {
+    public ResponseEntity<ResponseDTO> savePin(@Valid @RequestBody DevicePinSaveRequestDTO request) {
         deviceService.savePin(request.getDeviceId(), request.getMobilePin());
-        return ResponseEntity.ok("Mobile PIN saved successfully");
+        return ResponseEntity.ok(new ResponseDTO("Mobile PIN saved successfully"));
     }
 
     @PostMapping("/update-pin")
-    public ResponseEntity<String> updatePin(@Valid @RequestBody DevicePinSaveRequestDTO request) {
+    public ResponseEntity<ResponseDTO> updatePin(@Valid @RequestBody DevicePinSaveRequestDTO request) {
         deviceService.savePin(request.getDeviceId(), request.getMobilePin());
-        return ResponseEntity.ok("Mobile PIN updated successfully");
+        return ResponseEntity.ok(new ResponseDTO("Mobile PIN updated successfully"));
     }
 
     @PostMapping("/verify-pin")
-    public ResponseEntity<String> verifyPin(@Valid @RequestBody DeviceVerifyPinRequestDTO request) {
+    public ResponseEntity<ResponseDTO> verifyPin(@Valid @RequestBody DeviceVerifyPinRequestDTO request) {
         deviceService.verifyPin(request.getDeviceId(), request.getMobilePin());
-            return ResponseEntity.ok("PIN verified successfully");
+        return ResponseEntity.ok(new ResponseDTO("Mobile PIN verified successfully"));
     }
 
 }
