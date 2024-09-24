@@ -18,7 +18,7 @@ public class DeviceEntity {
     private String deviceId;
     private String status;
     private String mobilePin;
-
+    private String mobileNo;
     @CreationTimestamp
     private Instant createdAt;
     @UpdateTimestamp

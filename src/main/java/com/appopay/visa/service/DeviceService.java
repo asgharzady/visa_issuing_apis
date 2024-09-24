@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,59 +29,100 @@ public class DeviceService {
     private DeviceRepository deviceRepository;
 
 
-    public String getDeviceStatus(String deviceId, String username) {
+//    public String getDeviceStatus(String deviceId, String username) {
+//
+//        Optional<IamEntity> iam = iamRepository.findByUserName(username);
+//
+//        if (iam.isPresent()) {
+//            for (DeviceEntity deviceEntity : iam.get().getDevices()) {
+//                if (deviceEntity.getDeviceId().equals(deviceId)) {
+//                    return deviceEntity.getStatus();
+//                }
+//            }
+//        }
+//        return "device or username not found";
+//    }
+//
+//    public String bindDevice(String deviceId, String username, String newStatus) {
+//
+//        Optional<IamEntity> iamEntity = iamRepository.findByUserName(username);
+//        DeviceEntity device = new DeviceEntity();
+//        if (iamEntity.isPresent()) {
+//            IamEntity iam = iamEntity.get();
+//            for (DeviceEntity deviceEntity : iam.getDevices()) {
+//                String status = deviceEntity.getStatus();
+//                if (status.equals("ACTIVE") || status.equals("COOLING_OFF")) {
+//                    deviceEntity.setStatus("NOT_ACTIVE");
+//                }
+//                if (deviceEntity.getDeviceId().equals(deviceId)) {
+//                    device = deviceEntity;
+//                }
+//            }
+//
+//            device.setDeviceId(deviceId);
+//            if(newStatus == null){
+//                newStatus = "ACTIVE";
+//            }
+//            device.setStatus(newStatus);
+//
+//            iam.getDevices().add(device);
+//            iamRepository.save(iam);
+//            return "ok";
+//        }
+//        throw new CustomException("Username not found");
+//    }
+//
+//    public String reBindDevice(String deviceId, String username) {
+//        bindDevice(deviceId,username,"COOLING_OFF");
+//        return "ok";
+//    }
 
-        Optional<IamEntity> iam = iamRepository.findByUserName(username);
+    public String getDeviceStatus(String deviceId, String mobileNo) {
 
-        if (iam.isPresent()) {
-            for (DeviceEntity deviceEntity : iam.get().getDevices()) {
-                if (deviceEntity.getDeviceId().equals(deviceId)) {
-                    return deviceEntity.getStatus();
-                }
-            }
+        Optional<DeviceEntity> optionalDeviceEntity = deviceRepository.findByMobileNoAndDeviceId(mobileNo,deviceId);
+        if(optionalDeviceEntity.isPresent()){
+            return optionalDeviceEntity.get().getStatus();
         }
         return "device or username not found";
     }
 
-    public String bindDevice(String deviceId, String username, String newStatus) {
+    public String bindDevice(String deviceId, String mobileNo, String newStatus) {
 
-        Optional<IamEntity> iamEntity = iamRepository.findByUserName(username);
-        DeviceEntity device = new DeviceEntity();
-        if (iamEntity.isPresent()) {
-            IamEntity iam = iamEntity.get();
-            for (DeviceEntity deviceEntity : iam.getDevices()) {
+        List<DeviceEntity> list = deviceRepository.findByMobileNo(mobileNo);
+        if (!list.isEmpty()) {
+            for (DeviceEntity deviceEntity : list) {
                 String status = deviceEntity.getStatus();
                 if (status.equals("ACTIVE") || status.equals("COOLING_OFF")) {
                     deviceEntity.setStatus("NOT_ACTIVE");
                 }
-                if (deviceEntity.getDeviceId().equals(deviceId)) {
-                    device = deviceEntity;
-                }
+                deviceRepository.save(deviceEntity);
             }
-
-            device.setDeviceId(deviceId);
-            if(newStatus == null){
-                newStatus = "ACTIVE";
-            }
-            device.setStatus(newStatus);
-
-            iam.getDevices().add(device);
-            iamRepository.save(iam);
-            return "ok";
         }
-        throw new CustomException("Username not found");
+        Optional<DeviceEntity> optionalDeviceEntity = deviceRepository.findByMobileNoAndDeviceId(mobileNo, deviceId);
+        DeviceEntity deviceEntity = new DeviceEntity();
+        if (optionalDeviceEntity.isEmpty()) {
+            deviceEntity.setDeviceId(deviceId);
+            deviceEntity.setMobileNo(mobileNo);
+        } else {
+            deviceEntity = optionalDeviceEntity.get();
+        }
+        if (newStatus == null) {
+            newStatus = "ACTIVE";
+        }
+        deviceEntity.setStatus(newStatus);
+
+        deviceRepository.save(deviceEntity);
+
+        return "ok";
+
     }
 
-    public String reBindDevice(String deviceId, String username) {
-        bindDevice(deviceId,username,"COOLING_OFF");
+    public String reBindDevice(String deviceId, String mobileNo) {
+        bindDevice(deviceId, mobileNo, "COOLING_OFF");
         return "ok";
     }
 
     public void savePin(String deviceId, String mobilePin) {
-//        DeviceEntity existingDevice = deviceRepository.findByMobilePin(mobilePin);
-//        if (existingDevice != null && !existingDevice.getDeviceId().equals(deviceId)) {
-//            throw new IllegalArgumentException("PIN already associated with another device");
-//        }
 
         DeviceEntity device = deviceRepository.findByDeviceId(deviceId);
         if (device == null) {
@@ -93,10 +135,9 @@ public class DeviceService {
 
     public void verifyPin(String deviceId, String mobilePin) {
         DeviceEntity device = deviceRepository.findByDeviceId(deviceId);
-        if(device == null){
+        if (device == null) {
             throw new CustomException("Invalid device id");
-        }
-        else if(!(device.getMobilePin().equals(mobilePin))){
+        } else if (!(device.getMobilePin().equals(mobilePin))) {
             throw new CustomException("invalid mobile pin");
         }
     }

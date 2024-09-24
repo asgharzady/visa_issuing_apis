@@ -4,7 +4,7 @@ import lombok.Data;
 @Data
 public class DeviceEnquiryRequestDTO {
 
-    private String username;
+    private String mobileNo;
     private String deviceId;
 
 }

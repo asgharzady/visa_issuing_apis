@@ -17,6 +17,8 @@ public interface DeviceRepository extends JpaRepository<DeviceEntity, Long> {
     List<DeviceEntity> findAllWithUpdatedTimeBeforeAndStatus(@Param("time") Instant time, @Param("status") String status);
 
     DeviceEntity findByDeviceId(String deviceId);
+    List<DeviceEntity> findByMobileNo(String mobileNo);
+    Optional<DeviceEntity> findByMobileNoAndDeviceId(String mobileNo,String deviceId);
     DeviceEntity findByMobilePin(String mobilePin);
     DeviceEntity findByDeviceIdAndMobilePin(String deviceId, String mobilePin);
 }

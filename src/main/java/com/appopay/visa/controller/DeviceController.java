@@ -23,19 +23,19 @@ public class DeviceController {
 
     @PostMapping(value = "checkStatus")
     public ResponseEntity<ResponseDTO> checkDeviceBinding(@RequestBody DeviceEnquiryRequestDTO request) {
-        String status = deviceService.getDeviceStatus(request.getDeviceId(),request.getUsername());
+        String status = deviceService.getDeviceStatus(request.getDeviceId(),request.getMobileNo());
         return ResponseEntity.ok().body(new ResponseDTO(status));
     }
 
     @PostMapping(value = "bind")
     public ResponseEntity<ResponseDTO> bindDevice(@RequestBody DeviceEnquiryRequestDTO request) {
-        String status = deviceService.bindDevice(request.getDeviceId(),request.getUsername(),null);
+        String status = deviceService.bindDevice(request.getDeviceId(),request.getMobileNo(),null);
         return ResponseEntity.ok().body(new ResponseDTO(status));
     }
 
     @PostMapping(value = "reBind")
     public ResponseEntity<ResponseDTO> reBindDevice(@RequestBody DeviceEnquiryRequestDTO request) {
-        String status = deviceService.reBindDevice(request.getDeviceId(),request.getUsername());
+        String status = deviceService.reBindDevice(request.getDeviceId(),request.getMobileNo());
         return ResponseEntity.ok().body(new ResponseDTO(status));
     }
 
