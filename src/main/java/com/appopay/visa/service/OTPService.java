@@ -40,7 +40,6 @@ public class OTPService {
             return "false";
         }
 
-
         return "true";
 
     }

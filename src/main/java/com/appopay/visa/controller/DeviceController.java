@@ -1,9 +1,6 @@
 package com.appopay.visa.controller;
 
-import com.appopay.visa.model.DeviceEnquiryRequestDTO;
-import com.appopay.visa.model.DevicePinSaveRequestDTO;
-import com.appopay.visa.model.DeviceVerifyPinRequestDTO;
-import com.appopay.visa.model.ResponseDTO;
+import com.appopay.visa.model.*;
 import com.appopay.visa.service.DeviceService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,19 +20,19 @@ public class DeviceController {
 
     @PostMapping(value = "checkStatus")
     public ResponseEntity<ResponseDTO> checkDeviceBinding(@RequestBody DeviceEnquiryRequestDTO request) {
-        String status = deviceService.getDeviceStatus(request.getDeviceId(),request.getMobileNo());
+        String status = deviceService.getDeviceStatus(request.getDeviceId(), request.getMobileNo());
         return ResponseEntity.ok().body(new ResponseDTO(status));
     }
 
     @PostMapping(value = "bind")
     public ResponseEntity<ResponseDTO> bindDevice(@RequestBody DeviceEnquiryRequestDTO request) {
-        String status = deviceService.bindDevice(request.getDeviceId(),request.getMobileNo(),null);
+        String status = deviceService.bindDevice(request.getDeviceId(), request.getMobileNo(), null);
         return ResponseEntity.ok().body(new ResponseDTO(status));
     }
 
     @PostMapping(value = "reBind")
     public ResponseEntity<ResponseDTO> reBindDevice(@RequestBody DeviceEnquiryRequestDTO request) {
-        String status = deviceService.reBindDevice(request.getDeviceId(),request.getMobileNo());
+        String status = deviceService.reBindDevice(request.getDeviceId(), request.getMobileNo());
         return ResponseEntity.ok().body(new ResponseDTO(status));
     }
 
@@ -52,9 +49,9 @@ public class DeviceController {
     }
 
     @PostMapping("/verify-pin")
-    public ResponseEntity<ResponseDTO> verifyPin(@Valid @RequestBody DeviceVerifyPinRequestDTO request) {
-        deviceService.verifyPin(request.getDeviceId(), request.getMobilePin());
-        return ResponseEntity.ok(new ResponseDTO("Mobile PIN verified successfully"));
+    public ResponseEntity<VerifyResponseDTO> verifyPin(@Valid @RequestBody DeviceVerifyPinRequestDTO request) {
+        String response = deviceService.verifyPin(request.getDeviceId(), request.getMobilePin());
+        return ResponseEntity.ok(new VerifyResponseDTO(response));
     }
 
 }
