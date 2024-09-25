@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class VerifyResponseDTO {
-    private String message = "200";
+    private String message = "success";
     private String lastLoginTime;
 
     public VerifyResponseDTO(String lastLoginTime) {
