@@ -6,6 +6,9 @@ import com.appopay.visa.repository.DeviceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 @Service
@@ -51,12 +54,20 @@ public class DeviceService {
         deviceRepository.save(device);
     }
 
-    public void verifyPin(String deviceId, String mobilePin) {
+    public String verifyPin(String deviceId, String mobilePin) {
         DeviceEntity device = deviceRepository.findByDeviceId(deviceId);
         if (device == null) {
             throw new CustomException("Invalid device id");
         } else if (!(device.getMobilePin().equals(mobilePin))) {
             throw new CustomException("invalid mobile pin");
+        }
+        else {
+            Instant currentTime = Instant.now().truncatedTo(ChronoUnit.SECONDS);
+            device.setLastLoginTime(currentTime);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(java.time.ZoneOffset.UTC);
+            String formattedTime = formatter.format(currentTime);
+            deviceRepository.save(device);
+            return formattedTime;
         }
     }
 }
