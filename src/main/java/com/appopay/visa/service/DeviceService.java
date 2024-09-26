@@ -30,18 +30,18 @@ public class DeviceService {
 
         Optional<DeviceEntity> optionalDeviceEntity = deviceRepository.findByMobileNo(mobileNo);
         DeviceEntity deviceEntity = optionalDeviceEntity.orElseGet(DeviceEntity::new);
+        String previousDeviceId = optionalDeviceEntity.map(DeviceEntity::getDeviceId).orElse("null");
         if (optionalDeviceEntity.isEmpty()) {
             deviceEntity.setMobileNo(mobileNo);
         }
         deviceEntity.setStatus(newStatus == null ? "ACTIVE" : newStatus);
         deviceEntity.setDeviceId(deviceId);
         deviceRepository.save(deviceEntity);
-        return "ok";
+        return previousDeviceId;
     }
 
     public String reBindDevice(String deviceId, String mobileNo) {
-        bindDevice(deviceId, mobileNo, "COOLING_OFF");
-        return "ok";
+        return bindDevice(deviceId, mobileNo, "COOLING_OFF");
     }
 
     public void savePin(String deviceId, String mobilePin) {
@@ -60,8 +60,7 @@ public class DeviceService {
             throw new CustomException("Invalid device id");
         } else if (!(device.getMobilePin().equals(mobilePin))) {
             throw new CustomException("invalid mobile pin");
-        }
-        else {
+        } else {
             Instant currentTime = Instant.now().truncatedTo(ChronoUnit.SECONDS);
             device.setLastLoginTime(currentTime);
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(java.time.ZoneOffset.UTC);

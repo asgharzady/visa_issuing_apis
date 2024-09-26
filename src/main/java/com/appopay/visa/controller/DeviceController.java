@@ -25,15 +25,15 @@ public class DeviceController {
     }
 
     @PostMapping(value = "bind")
-    public ResponseEntity<ResponseDTO> bindDevice(@RequestBody DeviceEnquiryRequestDTO request) {
-        String status = deviceService.bindDevice(request.getDeviceId(),request.getMobileNo(),null);
-        return ResponseEntity.ok().body(new ResponseDTO(status));
+    public ResponseEntity<DeviceBindResponseDTO> bindDevice(@RequestBody DeviceEnquiryRequestDTO request) {
+        String previousDeviceId = deviceService.bindDevice(request.getDeviceId(),request.getMobileNo(),null);
+        return ResponseEntity.ok().body(new DeviceBindResponseDTO(previousDeviceId));
     }
 
     @PostMapping(value = "reBind")
-    public ResponseEntity<ResponseDTO> reBindDevice(@RequestBody DeviceEnquiryRequestDTO request) {
-        String status = deviceService.reBindDevice(request.getDeviceId(),request.getMobileNo());
-        return ResponseEntity.ok().body(new ResponseDTO(status));
+    public ResponseEntity<DeviceBindResponseDTO> reBindDevice(@RequestBody DeviceEnquiryRequestDTO request) {
+        String previousDeviceId = deviceService.reBindDevice(request.getDeviceId(),request.getMobileNo());
+        return ResponseEntity.ok().body(new DeviceBindResponseDTO(previousDeviceId));
     }
 
     @PostMapping("/save-pin")
