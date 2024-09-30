@@ -2,6 +2,7 @@ package com.appopay.visa.controller;
 
 import com.appopay.visa.model.ChangeOfacRequestDTO;
 import com.appopay.visa.model.PaginatedOfacDto;
+import com.appopay.visa.model.ResponseDTO;
 import com.appopay.visa.model.VisaApiResponse;
 import com.appopay.visa.service.OFACService;
 import com.appopay.visa.service.VisaAuthAndEncryptionServicesImpl;
@@ -29,13 +30,13 @@ public class OFACController {
     }
 
     @GetMapping(value = "status/{name}")
-    public ResponseEntity<String> getStatus(@PathVariable String name) throws Exception {
-        return ResponseEntity.ok().body(ofacService.getStatus(name));
+    public ResponseEntity<ResponseDTO> getStatus(@PathVariable String name) throws Exception {
+        return ResponseEntity.ok().body(new ResponseDTO(ofacService.getStatus(name)));
     }
 
     @PutMapping(value = "status/{name}")
-    public ResponseEntity<String> changeStatus(@RequestBody ChangeOfacRequestDTO request) throws Exception {
-        return ResponseEntity.ok().body(ofacService.changeStatus(request));
+    public ResponseEntity<ResponseDTO> changeStatus(@RequestBody ChangeOfacRequestDTO request) throws Exception {
+        return ResponseEntity.ok().body(new ResponseDTO(ofacService.changeStatus(request)));
     }
 
 
