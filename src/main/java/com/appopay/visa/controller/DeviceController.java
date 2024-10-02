@@ -5,10 +5,10 @@ import com.appopay.visa.service.DeviceService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
-import java.time.Instant;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("device/")
@@ -20,19 +20,19 @@ public class DeviceController {
 
     @PostMapping(value = "checkStatus")
     public ResponseEntity<ResponseDTO> checkDeviceBinding(@RequestBody DeviceEnquiryRequestDTO request) {
-        String status = deviceService.getDeviceStatus(request.getDeviceId(),request.getMobileNo());
+        String status = deviceService.getDeviceStatus(request.getDeviceId(), request.getMobileNo());
         return ResponseEntity.ok().body(new ResponseDTO(status));
     }
 
     @PostMapping(value = "bind")
     public ResponseEntity<DeviceBindResponseDTO> bindDevice(@RequestBody DeviceEnquiryRequestDTO request) {
-        String previousDeviceId = deviceService.bindDevice(request.getDeviceId(),request.getMobileNo(),null);
+        String previousDeviceId = deviceService.bindDevice(request.getDeviceId(), request.getMobileNo(), null);
         return ResponseEntity.ok().body(new DeviceBindResponseDTO(previousDeviceId));
     }
 
     @PostMapping(value = "reBind")
     public ResponseEntity<DeviceBindResponseDTO> reBindDevice(@RequestBody DeviceEnquiryRequestDTO request) {
-        String previousDeviceId = deviceService.reBindDevice(request.getDeviceId(),request.getMobileNo());
+        String previousDeviceId = deviceService.reBindDevice(request.getDeviceId(), request.getMobileNo());
         return ResponseEntity.ok().body(new DeviceBindResponseDTO(previousDeviceId));
     }
 
@@ -44,6 +44,13 @@ public class DeviceController {
 
     @PostMapping("/update-pin")
     public ResponseEntity<ResponseDTO> updatePin(@Valid @RequestBody DevicePinSaveRequestDTO request) {
+        deviceService.savePin(request.getDeviceId(), request.getMobilePin());
+        return ResponseEntity.ok(new ResponseDTO("Mobile PIN updated successfully"));
+    }
+
+    @PostMapping("/change-pin")
+    public ResponseEntity<ResponseDTO> changePin(@Valid @RequestBody DevicePinSaveRequestDTO request) {
+        deviceService.verifyPin(request.getDeviceId(), request.getOldPin());
         deviceService.savePin(request.getDeviceId(), request.getMobilePin());
         return ResponseEntity.ok(new ResponseDTO("Mobile PIN updated successfully"));
     }
