@@ -50,7 +50,7 @@ public class DeviceController {
     public ResponseEntity<ResponseDTO> savePin(@Valid @RequestBody DevicePinSaveRequestDTO request) {
         log.info("saving pin of: " + request.getDeviceId());
         deviceService.savePin(request.getDeviceId(), request.getMobilePin());
-        log.info("Mobile PIN saved successfully: " + request.getDeviceId());
+        log.info("Mobile PIN saved successfully of device id: " + request.getDeviceId());
         return ResponseEntity.ok(new ResponseDTO("Mobile PIN saved successfully"));
     }
 
@@ -58,7 +58,7 @@ public class DeviceController {
     public ResponseEntity<ResponseDTO> updatePin(@Valid @RequestBody DevicePinSaveRequestDTO request) {
         log.info("updating pin of: " + request.getDeviceId());
         deviceService.savePin(request.getDeviceId(), request.getMobilePin());
-        log.info("Mobile PIN updated successfully: " + request.getDeviceId());
+        log.info("Mobile PIN updated successfully of device id: " + request.getDeviceId());
         return ResponseEntity.ok(new ResponseDTO("Mobile PIN updated successfully"));
     }
 
