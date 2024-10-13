@@ -3,7 +3,7 @@ package com.appopay.visa.service;
 import com.appopay.visa.entity.CustomerToken;
 import com.appopay.visa.entity.Customers;
 import com.appopay.visa.entity.IamEntity;
-import com.appopay.visa.exception.CustomException;
+import com.appopay.visa.Exception.CustomException;
 import com.appopay.visa.model.CustomerDTO;
 import com.appopay.visa.model.CustomerTokenDTO;
 import com.appopay.visa.model.IamDTO;
@@ -64,7 +64,7 @@ public class CustomerService {
         return customerRepository.save(customers).toDTO();
     }
 
-    public CustomerDTO getById(Long id) {
+    public CustomerDTO getById(String id) {
         Optional<Customers> customers = customerRepository.findById(id);
         if (customers.isPresent()) {
             return customers.get().toDTO();

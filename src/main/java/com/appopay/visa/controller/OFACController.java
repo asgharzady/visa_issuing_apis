@@ -32,13 +32,17 @@ public class OFACController {
     @GetMapping(value = "status/{name}")
     public ResponseEntity<ResponseDTO> getStatus(@PathVariable String name) throws Exception {
         log.info("getting OFAC status of: " + name);
-        return ResponseEntity.ok().body(new ResponseDTO(ofacService.getStatus(name)));
+        String status =ofacService.getStatus(name);
+        log.info("OFAC get status response: " + status);
+        return ResponseEntity.ok().body(new ResponseDTO(status));
     }
 
     @PutMapping(value = "status/{name}")
     public ResponseEntity<ResponseDTO> changeStatus(@RequestBody ChangeOfacRequestDTO request) throws Exception {
         log.info("changing OFAC status of: " + request.toString());
-        return ResponseEntity.ok().body(new ResponseDTO(ofacService.changeStatus(request)));
+        String status =ofacService.changeStatus(request);
+        log.info("OFAC change status response: " + status);
+        return ResponseEntity.ok().body(new ResponseDTO(status));
     }
 
 

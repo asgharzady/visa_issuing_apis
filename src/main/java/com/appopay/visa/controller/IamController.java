@@ -25,18 +25,6 @@ public class IamController {
 
     private static final Logger log = LoggerFactory.getLogger(CardManagementController.class);
 
-//    @PostMapping("/login")
-//    public String login(@RequestBody IamDTO loginRequest) {
-//        Authentication authentication = authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(
-//                        loginRequest.getUserName(),
-//                        loginRequest.getPassword()
-//                )
-//        );
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//        return "Login successful!";
-//    }
-
     @PostMapping("/login")
     public String login(@RequestBody IamDTO loginRequest) {
         log.info("calling service for login");
