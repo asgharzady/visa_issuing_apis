@@ -81,17 +81,6 @@ public class DeviceService {
         deviceRepository.save(device);
     }
 
-//        public void savePin(String deviceId, String mobilePin) {
-//
-//        DeviceEntity device = deviceRepository.findByDeviceId(deviceId);
-//        if (device == null) {
-//            throw new CustomException("Device id not found");
-//        }
-//        device.setMobilePin(mobilePin);
-//        deviceRepository.save(device);
-//    }
-//
-//
     public String verifyPin(String deviceId, String mobilePin) {
         DeviceEntity device = deviceRepository.findByDeviceId(deviceId);
         if (device == null) {
