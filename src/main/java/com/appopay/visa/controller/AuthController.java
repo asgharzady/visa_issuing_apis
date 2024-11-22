@@ -1,6 +1,7 @@
 package com.appopay.visa.controller;
 
 
+import com.appopay.visa.model.ResponseDTO;
 import com.appopay.visa.util.JwtUtil;
 import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,18 +22,18 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) {
+    public ResponseEntity<ResponseDTO> login(@RequestParam String username, @RequestParam String password) {
         if (STATIC_USERNAME.equals(username) && STATIC_PASSWORD.equals(password)) {
             String token = jwtUtil.generateToken(username);
-            return ResponseEntity.ok().body("Bearer " + token);
+            return ResponseEntity.ok().body(new ResponseDTO(token));
         }
-        return ResponseEntity.status(401).body("Invalid username or password");
+        return ResponseEntity.status(401).body(new ResponseDTO("invalid username or password"));
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<?> refreshToken(@RequestHeader("Authorization") String authorizationHeader) {
+    public ResponseEntity<ResponseDTO> refreshToken(@RequestHeader("Authorization") String authorizationHeader) {
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            return ResponseEntity.badRequest().body("Invalid Authorization header");
+            return ResponseEntity.badRequest().body(new ResponseDTO("Invalid Authorization header"));
         }
 
         String oldToken = authorizationHeader.substring(7); // Remove "Bearer " prefix
@@ -42,12 +43,12 @@ public class AuthController {
             // Extract username even from expired tokens
             username = jwtUtil.extractUsernameFromExpiredToken(oldToken);
         } catch (JwtException | IllegalArgumentException e) {
-            return ResponseEntity.status(403).body("Invalid token");
+            return ResponseEntity.status(403).body(new ResponseDTO("Invalid token"));
         }
 
         // Generate a new token
         String newToken = jwtUtil.generateToken(username);
 
-        return ResponseEntity.ok(newToken);
+        return ResponseEntity.ok(new ResponseDTO(newToken));
     }
 }
