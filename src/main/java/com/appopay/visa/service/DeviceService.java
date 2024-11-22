@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -50,10 +53,45 @@ public class DeviceService {
         if (device == null) {
             throw new CustomException("Device id not found");
         }
+
+        // Parse the stored string into a list of previous passwords
+        List<String> previousPasswords = new ArrayList<>();
+        if (device.getPreviousPins() != null && !device.getPreviousPins().isEmpty()) {
+            previousPasswords = new ArrayList<>(Arrays.asList(device.getPreviousPins().split(",")));
+        }
+
+        // Check if the new password matches any of the previous passwords
+        if (previousPasswords.stream()
+                .anyMatch(mobilePin::equals)) {
+            throw new CustomException("The new password cannot be one of the previous 3 passwords.");
+        }
+
+        // Update the password
         device.setMobilePin(mobilePin);
+
+        // Update the previous passwords list
+        if (previousPasswords.size() >= 4) {
+            previousPasswords.remove(0);
+        }
+        previousPasswords.add(mobilePin);
+
+        // Convert the updated list back to a comma-separated string
+        String updatedPreviousPasswords = String.join(",", previousPasswords);
+        device.setPreviousPins(updatedPreviousPasswords);
         deviceRepository.save(device);
     }
 
+//        public void savePin(String deviceId, String mobilePin) {
+//
+//        DeviceEntity device = deviceRepository.findByDeviceId(deviceId);
+//        if (device == null) {
+//            throw new CustomException("Device id not found");
+//        }
+//        device.setMobilePin(mobilePin);
+//        deviceRepository.save(device);
+//    }
+//
+//
     public String verifyPin(String deviceId, String mobilePin) {
         DeviceEntity device = deviceRepository.findByDeviceId(deviceId);
         if (device == null) {
