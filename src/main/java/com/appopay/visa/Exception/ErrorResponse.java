@@ -1,4 +1,4 @@
-package com.appopay.visa.exception;
+package com.appopay.visa.Exception;
 
 
 import lombok.Data;

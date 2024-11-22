@@ -1,6 +1,6 @@
 package com.appopay.visa.service;
 
-import com.appopay.visa.exception.CustomException;
+import com.appopay.visa.Exception.CustomException;
 import com.appopay.visa.entity.DeviceEntity;
 import com.appopay.visa.repository.DeviceRepository;
 import org.springframework.beans.factory.annotation.Autowired;

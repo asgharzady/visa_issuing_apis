@@ -1,7 +1,7 @@
 package com.appopay.visa.service;
 
 import com.appopay.visa.entity.OTPEntiy;
-import com.appopay.visa.exception.CustomException;
+import com.appopay.visa.Exception.CustomException;
 import com.appopay.visa.model.TwillioRequestDTO;
 import com.appopay.visa.repository.OTPRepository;
 import org.springframework.beans.factory.annotation.Autowired;

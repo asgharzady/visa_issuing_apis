@@ -1,4 +1,4 @@
-package com.appopay.visa.exception;
+package com.appopay.visa.Exception;
 
 public class CustomException extends RuntimeException {
     public CustomException(String message) {
